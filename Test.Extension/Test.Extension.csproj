@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+		<ContentTargetFolders>.</ContentTargetFolders>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <PackageId>Test.Extension</PackageId>
+    <PackageTags>Mindburn</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Product>Test.Extension</Product>
+    <Title>Test.Extension</Title>
+    <Version>0.0.1</Version>
+    <Authors>Carl Brubaker,Chris Houston</Authors>
+    <Company>Mindburn Solutions</Company>
+    <Description>Test Extension for Mindburn</Description>
+    <RepositoryUrl></RepositoryUrl>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+  </PropertyGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+<ItemGroup>
+    <PackageReference Include="Umbraco.Cms" Version="16.0.0-rc4" />
+  </ItemGroup>
+
+  <Target Name="PreBuildClientRelease" BeforeTargets="PreBuild" Condition="$(ConfigurationName) == Release">
+    <Message Text="Building client side assets using npm." Importance="High" />
+    <!-- Only remove source files, not the built output -->
+    <ItemGroup>
+      <Compile Remove="Client\**" />
+      <Content Remove="Client\**" />
+      <Content Remove="wwwroot\App_Plugins\TestExtension\**" />
+      <EmbeddedResource Remove="Client\**" />
+      <None Remove="Client\**" />
+    </ItemGroup>
+
+    <Exec Command="npm install" WorkingDirectory="$(ProjectDir)\Client" />
+    <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)\Client" />
+
+    <ItemGroup>
+      <Content Include="wwwroot\App_Plugins\TestExtension\**" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="$(ConfigurationName) != DebugNoClientSideBuild">
+    <Message Text="Client side code was built." Importance="High" />
+  </Target>
+</Project>

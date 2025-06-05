@@ -1,0 +1,10 @@
+
+Test.Extension/bin/
+
+Test.Extension/obj/
+
+Test.Extension/Client/node_modules/
+
+Test.Extension/Client/.DS_Store
+
+.vs/
