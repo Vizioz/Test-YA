@@ -1,12 +1,12 @@
 {
-  "id": "MySection",
-  "name": "MySection",
-  "version": "0.0.0",
+  "id": "TestExtension",
+  "name": "Test Extension",
+  "version": "0.0.1",
   "allowTelemetry": true,
   "extensions": [
     {
-      "name": "My Section Bundle",
-      "alias": "MySection.Bundle",
+      "name": "Test Extension Bundle",
+      "alias": "TestExtension.Bundle",
       "type": "bundle",
       "js": "/App_Plugins/TestExtension/my-section.js"
     }

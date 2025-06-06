@@ -26,7 +26,14 @@
 	</ItemGroup>
 
 <ItemGroup>
-    <PackageReference Include="Umbraco.Cms" Version="16.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="16.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.Common" Version="16.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Api.Common" Version="16.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Api.Management" Version="16.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Infrastructure" Version="16.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Core" Version="16.0.0-rc4" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
   </ItemGroup>
 
   <Target Name="PreBuildClientRelease" BeforeTargets="PreBuild" Condition="$(ConfigurationName) == Release">

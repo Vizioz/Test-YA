@@ -1,0 +1,12 @@
+🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?
+Error: 🚫 client needs to be set to generate SDKs - which HTTP client do you want to use?
+    at Object.pluginByTag (file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/chunk-AORBOYHR.js:12:60891)
+    at Object._infer (file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/chunk-AORBOYHR.js:12:5651)
+    at i (file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/chunk-AORBOYHR.js:12:60970)
+    at gf (file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/chunk-AORBOYHR.js:12:61063)
+    at bf (file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/chunk-AORBOYHR.js:12:61726)
+    at file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/chunk-AORBOYHR.js:12:62975
+    at Array.map (<anonymous>)
+    at vT (file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/chunk-AORBOYHR.js:12:62281)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Ws (file:///R:/Development/Client%20Projects/MindBurn/Test-YA/Test.Extension/Client/node_modules/@hey-api/openapi-ts/dist/index.js:1302:2979)
