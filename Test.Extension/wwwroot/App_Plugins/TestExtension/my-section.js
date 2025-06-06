@@ -29,7 +29,7 @@ const t = [
         match: "TestSection.Section"
       }
     ],
-    element: () => import("./test-dashboard.element-DhRXpQrc.js")
+    element: () => import("./test-dashboard.element-CJq87HnO.js")
   }
 ], a = [
   ...t,

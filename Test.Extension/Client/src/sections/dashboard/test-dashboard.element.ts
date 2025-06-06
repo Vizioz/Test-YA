@@ -1,10 +1,8 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { UmbElementMixin } from '@umbraco-cms/backoffice/element-api';
-// import { tryExecute } from '@umbraco-cms/backoffice/resources';
 import { UMB_AUTH_CONTEXT } from '@umbraco-cms/backoffice/auth';
-import { V1Service, type TestItem, type CreateTestItemRequest, type UpdateTestItemRequest } from '../../api';
-import { client } from '../../api/client.gen';
+import { type TestItem, type CreateTestItemRequest, type UpdateTestItemRequest } from '../../api/types.gen';
 
 @customElement('test-dashboard')
 export class TestDashboardElement extends UmbElementMixin(LitElement) {
@@ -50,23 +48,9 @@ export class TestDashboardElement extends UmbElementMixin(LitElement) {
           withCredentials: umbOpenApi.withCredentials
         });
         
-        // Configure the API client with base URL
-        // Remove any trailing /umbraco since our API paths already include the full path
-        const baseUrl = umbOpenApi.base.replace(/\/umbraco\/?$/, '');
-        console.log("🌐 Setting baseUrl to:", baseUrl);
-        console.log("🌐 Original base:", umbOpenApi.base);
-        
-        // Try setting baseUrl to empty string since paths are absolute
-        client.setConfig({
-          baseUrl: '',
-        });
-        
-        // Debug: Test the client configuration
-        console.log("🔧 Client config after setup:", client.getConfig());
-        
-        // Test manual fetch to see if the issue is with the client
+        // Test manual fetch to verify the API endpoint works
         try {
-          const testUrl = `${baseUrl}/umbraco/mindburn/api/v1/items`;
+          const testUrl = `${umbOpenApi.base}/umbraco/mindburn/api/v1/items`;
           console.log("🧪 Testing manual fetch to:", testUrl);
           const token = await umbOpenApi.token();
           const testResponse = await fetch(testUrl, {
@@ -79,27 +63,6 @@ export class TestDashboardElement extends UmbElementMixin(LitElement) {
         } catch (testError) {
           console.error("🧪 Manual fetch failed:", testError);
         }
-        
-        // Use interceptors to add the token dynamically for each request
-        client.interceptors.request.use(async (request) => {
-          const token = await umbOpenApi.token();
-          console.log("🔑 Adding token to request:", token ? `${token.substring(0, 20)}...` : 'NO TOKEN');
-          console.log("🔗 Request URL:", request.url);
-          console.log("🔍 Full request object:", request);
-          console.log("🔍 Request URL type:", typeof request.url);
-          
-          if (token) {
-            return {
-              ...request,
-              headers: {
-                ...request.headers,
-                'Authorization': `Bearer ${token}`,
-              },
-            };
-          }
-          
-          return request;
-        });
         
         console.log("🔐 Auth initialization complete");
         resolve();
@@ -303,18 +266,31 @@ export class TestDashboardElement extends UmbElementMixin(LitElement) {
         description: this._formData.description
       };
 
-      console.log("🚀 Updating item using direct API call...");
-      const response = await V1Service.updateItem({
-        path: { id: this._editingItem.id },
-        body: request
+      console.log("🚀 Updating item using manual fetch...");
+      
+      // Get auth context for token
+      const authContext = await this.getContext(UMB_AUTH_CONTEXT);
+      const umbOpenApi = authContext.getOpenApiConfiguration();
+      const token = await umbOpenApi.token();
+      
+      // Manual fetch for update
+      const response = await fetch(`/umbraco/mindburn/api/v1/items/${this._editingItem.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(request)
       });
-
-      if (response.error) {
-        console.error('❌ API returned error:', response.error);
-        throw new Error(`API Error: ${JSON.stringify(response.error, null, 2)}`);
+      
+      console.log("📊 Manual fetch response:", response.status, response.statusText);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-
-      console.log("✅ Item updated successfully:", response.data);
+      
+      const data = await response.json();
+      console.log("✅ Item updated successfully:", data);
       await this._loadItems();
       this._resetForm();
     } catch (error) {
@@ -337,16 +313,28 @@ export class TestDashboardElement extends UmbElementMixin(LitElement) {
       // Wait for authentication to be initialized
       await this.#authInitPromise;
       
-      console.log("🚀 Deleting item using direct API call...");
-      const response = await V1Service.deleteItem({
-        path: { id: id }
+      console.log("🚀 Deleting item using manual fetch...");
+      
+      // Get auth context for token
+      const authContext = await this.getContext(UMB_AUTH_CONTEXT);
+      const umbOpenApi = authContext.getOpenApiConfiguration();
+      const token = await umbOpenApi.token();
+      
+      // Manual fetch for delete
+      const response = await fetch(`/umbraco/mindburn/api/v1/items/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
-
-      if (response.error) {
-        console.error('❌ API returned error:', response.error);
-        throw new Error(`API Error: ${JSON.stringify(response.error, null, 2)}`);
+      
+      console.log("📊 Manual fetch response:", response.status, response.statusText);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-
+      
       console.log("✅ Item deleted successfully");
       await this._loadItems();
     } catch (error) {
